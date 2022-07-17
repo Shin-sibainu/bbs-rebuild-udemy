@@ -1,47 +1,15 @@
+<!-- これは送信しても表示位置固定用に書くPHP -->
 <?php
+$position = 0;
 
-$error_message = array();
+$msg = null;
 
-if (isset($_POST['submitButton'])) {
-    //TODO:表示名チェック
-    //TODO:コメント入力チェック
-
-    //エラーメッセージが何もないときだけコメント書き込み可能
-    if (empty($error_message)) {
-
-        //同じスレッド内でのコメント書き込みのときだけクエリを叩く。
-        if ($thread["id"] == $_POST["threadID"]) {
-
-            $post_date = date("Y-m-d H:i:s");
-            //トランザクション開始
-            $pdo->beginTransaction();
-            try {
-                //今書き込んでいるスレッドのIDをコメントのthread_idに挿入するSQL文を各
-                $sql = "INSERT INTO comment (username, message, post_date, thread_id) VALUES (:username, :message, :post_date, :thread_id)";
-                $stmt = $pdo->prepare($sql);
-
-                //値をセット
-                $stmt->bindParam(":username", $_POST["username"], PDO::PARAM_STR);
-                $stmt->bindParam(":message", $_POST["message"], PDO::PARAM_STR);
-                $stmt->bindParam(":post_date", $post_date, PDO::PARAM_STR);
-                $stmt->bindParam(":thread_id", $_POST["threadID"], PDO::PARAM_STR);
-
-                $stmt->execute();
-
-                $pdo->commit();
-            } catch (Exception $e) {
-                //エラーが発生したときはロールバック(処理取り消し)
-                $pdo->rollBack();
-            }
-        }
-        $stmt = null;
-    }
+if ((isset($_REQUEST["position"]) == true)) {
+    $position = $_REQUEST["position"];
 }
 
-
-
-// var_dump($_POST["thread_id"]);
 ?>
+
 
 <!-- 各スレッドIDをコメントのthread_idに挿入したい。 -->
 <form method="POST" class="formWrapper">
@@ -54,4 +22,24 @@ if (isset($_POST['submitButton'])) {
     <div>
         <textarea name="message" class="commentTextArea"></textarea>
     </div>
+    <!-- 位置取得用 -->
+    <input type="hidden" name="position" value="0">
 </form>
+
+<!-- 送信しても同じ表示位置にいる仕組み -->
+</style>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+    $(document).ready(() => {
+        window.onload = function() {
+            // console.log(<?php echo $position; ?>)
+            $(window).scrollTop(<?php echo $position; ?>);
+        }
+
+        $("input[type=submit]").click(() => {
+            let position = $(window).scrollTop(); //現在のスクロール位置
+            // console.log(position);
+            $("input:hidden[name=position]").val(position);
+        })
+    });
+</script>

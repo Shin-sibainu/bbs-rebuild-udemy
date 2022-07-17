@@ -1,4 +1,17 @@
-<!-- スレッドを繰り返し表示したい -->
+    <!-- スレッド表示 -->
+    <?php include("app/includes/thread.php"); ?>
+
+    <!-- 新規スレッド作成 -->
+    <?php include("app/includes/newThread.php"); ?>
+
+               <!-- コメント表示エリア -->
+                <?php include("commentSection.php"); ?>
+
+                <!-- フォーム打ち込みエリア -->
+                <?php include("commentForm.php"); ?>
+
+
+<!-- スレッドを繰り返し表示したい
 <?php
 $thread_array = array();
 
@@ -7,6 +20,7 @@ $sql = "SELECT * FROM thread";
 $statement = $pdo->prepare($sql);
 $statement->execute();
 
+// print("b");
 
 $thread_array = $statement;
 // var_dump($thread_array)
@@ -20,7 +34,6 @@ $thread_array = $statement;
                 <!-- <h1>２チャンネル作ってみたｗｗｗ</h1> -->
                 <h1><?php echo $thread["title"] ?></h1>
             </div>
-
             <!-- コメント表示エリア -->
             <?php include("commentSection.php"); ?>
 
@@ -28,4 +41,7 @@ $thread_array = $statement;
             <?php include("commentForm.php"); ?>
         </div>
     </div>
-<?php endforeach; ?>
+<?php endforeach; ?> -->
+
+
+ <?php include(ROOT_PATH . "/app/includes/thread.php"); ?>
