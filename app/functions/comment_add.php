@@ -19,30 +19,28 @@ if (isset($_POST['submitButton'])) {
     //エラーメッセージが何もないときだけコメント書き込み可能
     if (empty($error_message)) {
 
-        //同じスレッド内でのコメント書き込みのときだけクエリを叩く。
-        if ($thread["id"] == $_POST["threadID"]) {
 
-            $post_date = date("Y-m-d H:i:s");
-            //トランザクション開始
-            $pdo->beginTransaction();
-            try {
-                //今書き込んでいるスレッドのIDをコメントのthread_idに挿入するSQL文を各
-                $sql = "INSERT INTO comment (username, message, post_date, thread_id) VALUES (:username, :message, :post_date, :thread_id)";
-                $stmt = $pdo->prepare($sql);
 
-                //値をセット
-                $stmt->bindParam(":username", $clean["username"], PDO::PARAM_STR);
-                $stmt->bindParam(":message", $clean["message"], PDO::PARAM_STR);
-                $stmt->bindParam(":post_date", $post_date, PDO::PARAM_STR);
-                $stmt->bindParam(":thread_id", $_POST["threadID"], PDO::PARAM_STR);
+        $post_date = date("Y-m-d H:i:s");
+        //トランザクション開始
+        $pdo->beginTransaction();
+        try {
+            //今書き込んでいるスレッドのIDをコメントのthread_idに挿入するSQL文を各
+            $sql = "INSERT INTO comment (username, message, post_date, thread_id) VALUES (:username, :message, :post_date, :thread_id)";
+            $stmt = $pdo->prepare($sql);
 
-                $stmt->execute();
+            //値をセット
+            $stmt->bindParam(":username", $clean["username"], PDO::PARAM_STR);
+            $stmt->bindParam(":message", $clean["message"], PDO::PARAM_STR);
+            $stmt->bindParam(":post_date", $post_date, PDO::PARAM_STR);
+            $stmt->bindParam(":thread_id", $_POST["threadID"], PDO::PARAM_STR);
 
-                $pdo->commit();
-            } catch (Exception $e) {
-                //エラーが発生したときはロールバック(処理取り消し)
-                $pdo->rollBack();
-            }
+            $stmt->execute();
+
+            $pdo->commit();
+        } catch (Exception $e) {
+            //エラーが発生したときはロールバック(処理取り消し)
+            $pdo->rollBack();
         }
         $stmt = null;
     }

@@ -4,8 +4,9 @@ $position = 0;
 
 $msg = null;
 
-if ((isset($_REQUEST["position"]) == true)) {
-    $position = $_REQUEST["position"];
+if ((isset($_POST["position"]) == true)) {
+    //現在の位置座標を取得
+    $position = $_POST["position"];
 }
 
 ?>
@@ -30,16 +31,13 @@ if ((isset($_REQUEST["position"]) == true)) {
 </style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script>
+    console.log($(window).scrollTop())
+    //HTML読み込みが終わったら
     $(document).ready(() => {
-        window.onload = function() {
-            // console.log(<?php echo $position; ?>)
-            $(window).scrollTop(<?php echo $position; ?>);
-        }
-
         $("input[type=submit]").click(() => {
             let position = $(window).scrollTop(); //現在のスクロール位置
-            // console.log(position);
-            $("input:hidden[name=position]").val(position);
+            $("input:hidden[name=position]").val(position); //value属性に現在位置を挿入
         })
+        $(window).scrollTop(<?php echo $position; ?>);
     });
 </script>
