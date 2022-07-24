@@ -17,7 +17,11 @@ if ((isset($_POST["position"]) == true)) {
     <div>
         <input type="submit" value="書き込む" name="submitButton">
         <label for="usernameLabel">名前：</label>
-        <input type="text" name="username">
+        <input type="text" name="username" value="<?php
+                                                    if (isset($_SESSION["username"]) && $thread['id'] == $comment["thread_id"]) {
+                                                        echo $_SESSION["username"];
+                                                    }
+                                                    ?>">
         <input type="hidden" name="threadID" value="<?php echo $thread["id"]; ?>">
     </div>
     <div>
